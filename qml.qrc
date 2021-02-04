@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Board.qml</file>
+        <file>Square.qml</file>
+        <file>pieces/b.png</file>
+        <file>pieces/B.png</file>
+        <file>pieces/k.png</file>
+        <file>pieces/K.png</file>
+        <file>pieces/n.png</file>
+        <file>pieces/N.png</file>
+        <file>pieces/p.png</file>
+        <file>pieces/P.png</file>
+        <file>pieces/q.png</file>
+        <file>pieces/Q.png</file>
+        <file>pieces/r.png</file>
+        <file>pieces/R.png</file>
+    </qresource>
+</RCC>
