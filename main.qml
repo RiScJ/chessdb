@@ -19,10 +19,19 @@ Window {
 	property bool canBlackCastleLong: true
 	property bool canBlackCastleShort: true
 
+	property bool castling: false
+	property bool castlingColor
+	// true --> white ; false --> black
+	property bool castlingDirection
+
+	// true --> long ; false --> short
 	property color selectionColor: "#8bd6bf"
 
 	property var selectedSquare
 	property var nextSquare
+
+	property var oldRookSquare
+	property var newRookSquare
 
 	Rectangle {
 		id: board_border
@@ -156,6 +165,62 @@ Window {
 				selectedSquare = board.squareArray[file - 1 + (rank - 1) * 8]
 				selectedSquare.squareColor = selectionColor
 			} else if (isLegal(file, rank)) {
+				// Update the castling history
+				if (selectedSquare.file === 1) {
+					if (selectedSquare.rank === 1) {
+						canWhiteCastleLong = false
+					} else if (selectedSquare.rank === 8) {
+						canBlackCastleLong = false
+					}
+				} else if (selectedSquare.file === 5) {
+					if (selectedSquare.rank === 1) {
+						canWhiteCastleLong = false
+						canWhiteCastleShort = false
+					} else if (selectedSquare.rank === 8) {
+						canBlackCastleLong = false
+						canBlackCastleShort = false
+					}
+				} else if (selectedSquare.file === 8) {
+					if (selectedSquare.rank === 1) {
+						canWhiteCastleShort = false
+					} else if (selectedSquare.rank === 8) {
+						canBlackCastleShort = false
+					}
+				}
+
+				// Castle if necessary
+				if (castling) {
+					if (castlingColor) {
+						if (castlingDirection) {
+							// White castles queenside
+							oldRookSquare = board.squareArray[0]
+							newRookSquare = board.squareArray[3]
+							newRookSquare.piece = encodePiece("R")
+							oldRookSquare.piece = encodePiece(" ")
+						} else {
+							// White castles kingside
+							oldRookSquare = board.squareArray[7]
+							newRookSquare = board.squareArray[5]
+							newRookSquare.piece = encodePiece("R")
+							oldRookSquare.piece = encodePiece(" ")
+						}
+					} else {
+						if (castlingDirection) {
+							// Black castles queenside
+							oldRookSquare = board.squareArray[56]
+							newRookSquare = board.squareArray[59]
+							newRookSquare.piece = encodePiece("r")
+							oldRookSquare.piece = encodePiece(" ")
+						} else {
+							// Black castles kingside
+							oldRookSquare = board.squareArray[63]
+							newRookSquare = board.squareArray[61]
+							newRookSquare.piece = encodePiece("r")
+							oldRookSquare.piece = encodePiece(" ")
+						}
+					}
+				}
+
 				nextSquare = board.squareArray[file - 1 + (rank - 1) * 8]
 				nextSquare.piece = selectedSquare.piece
 				selectedSquare.piece = encodePiece(" ")
@@ -180,6 +245,69 @@ Window {
 				if (Math.abs(selectedSquare.rank - rank) <= 1) {
 					if (isEmptyOrEnemy(file, rank)) {
 						return true
+					}
+				} else {
+					return false
+				}
+			} else if (Math.abs(selectedSquare.file - file) === 2) {
+				if (selectedSquare.file === 5 && selectedSquare.rank === 1) {
+					if (file < 5) {
+						if (canWhiteCastleLong) {
+							if (isEmpty(2, 1) && isEmpty(3,
+														 1) && isEmpty(4, 1)) {
+								castling = true
+								castlingColor = true
+								castlingDirection = true
+								return true
+							} else {
+								return false
+							}
+						} else {
+							return false
+						}
+					} else {
+						if (canWhiteCastleShort) {
+							if (isEmpty(6, 1) && isEmpty(7, 1)) {
+								castling = true
+								castlingColor = true
+								castlingDirection = false
+								return true
+							} else {
+								return false
+							}
+						} else {
+							return false
+						}
+					}
+				} else if (selectedSquare.file === 5
+						   && selectedSquare.rank === 8) {
+					if (file < 5) {
+						if (canBlackCastleLong) {
+							if (isEmpty(2, 8) && isEmpty(3,
+														 8) && isEmpty(4, 8)) {
+								castling = true
+								castlingColor = false
+								castlingDirection = true
+								return true
+							} else {
+								return false
+							}
+						} else {
+							return false
+						}
+					} else {
+						if (canBlackCastleShort) {
+							if (isEmpty(6, 8) && isEmpty(7, 8)) {
+								castling = true
+								castlingColor = false
+								castlingDirection = false
+								return true
+							} else {
+								return false
+							}
+						} else {
+							return false
+						}
 					}
 				} else {
 					return false
