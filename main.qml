@@ -173,9 +173,11 @@ Window {
 
 	function isLegal(file, rank) {
 		var piece = pieceType(selectedSquare.piece)
+		var i
+		var blocked = false
 		if (piece === "king") {
-			if (abs(selectedSquare.file - file) <= 1) {
-				if (abs(selectedSquare.rank - rank) <= 1) {
+			if (Math.abs(selectedSquare.file - file) <= 1) {
+				if (Math.abs(selectedSquare.rank - rank) <= 1) {
 					if (isEmptyOrEnemy(file, rank)) {
 						return true
 					}
@@ -186,13 +188,327 @@ Window {
 				return false
 			}
 		} else if (piece === "queen") {
-
+			if (Math.abs(file - selectedSquare.file) === Math.abs(
+						rank - selectedSquare.rank)) {
+				if (file > selectedSquare.file) {
+					if (rank > selectedSquare.rank) {
+						// Up and to the right
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file + i,
+										 selectedSquare.rank + i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					} else {
+						// Down and to the right
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file + i,
+										 selectedSquare.rank - i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					}
+				} else {
+					if (rank > selectedSquare.rank) {
+						// Up and to the left
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file - i,
+										 selectedSquare.rank + i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					} else {
+						// Down and to the left
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file - i,
+										 selectedSquare.rank - i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					}
+				}
+			} else if (file === selectedSquare.file) {
+				if (rank > selectedSquare.rank) {
+					blocked = false
+					for (i = selectedSquare.rank + 1; i < rank; i++) {
+						if (!isEmpty(file, i)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					blocked = false
+					for (i = selectedSquare.rank - 1; i > rank; i--) {
+						if (!isEmpty(file, i)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				}
+			} else if (rank === selectedSquare.rank) {
+				if (file > selectedSquare.file) {
+					blocked = false
+					for (i = selectedSquare.file + 1; i < file; i++) {
+						if (!isEmpty(i, rank)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					blocked = false
+					for (i = selectedSquare.file - 1; i > file; i--) {
+						if (!isEmpty(i, rank)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
 		} else if (piece === "rook") {
-
+			if (file === selectedSquare.file) {
+				if (rank > selectedSquare.rank) {
+					blocked = false
+					for (i = selectedSquare.rank + 1; i < rank; i++) {
+						if (!isEmpty(file, i)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					blocked = false
+					for (i = selectedSquare.rank - 1; i > rank; i--) {
+						if (!isEmpty(file, i)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				}
+			} else if (rank === selectedSquare.rank) {
+				if (file > selectedSquare.file) {
+					blocked = false
+					for (i = selectedSquare.file + 1; i < file; i++) {
+						if (!isEmpty(i, rank)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					blocked = false
+					for (i = selectedSquare.file - 1; i > file; i--) {
+						if (!isEmpty(i, rank)) {
+							blocked = true
+						}
+					}
+					if (blocked === true) {
+						return false
+					}
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
 		} else if (piece === "bishop") {
-
+			if (Math.abs(file - selectedSquare.file) === Math.abs(
+						rank - selectedSquare.rank)) {
+				if (file > selectedSquare.file) {
+					if (rank > selectedSquare.rank) {
+						// Up and to the right
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file + i,
+										 selectedSquare.rank + i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					} else {
+						// Down and to the right
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file + i,
+										 selectedSquare.rank - i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					}
+				} else {
+					if (rank > selectedSquare.rank) {
+						// Up and to the left
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file - i,
+										 selectedSquare.rank + i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					} else {
+						// Down and to the left
+						blocked = false
+						for (i = 1; i < Math.abs(
+								 file - selectedSquare.file); i++) {
+							if (!isEmpty(selectedSquare.file - i,
+										 selectedSquare.rank - i)) {
+								blocked = true
+							}
+						}
+						if (blocked) {
+							return false
+						}
+						if (isEmptyOrEnemy(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					}
+				}
+			} else {
+				return false
+			}
 		} else if (piece === "knight") {
-
+			if (Math.abs(file - selectedSquare.file) === 1) {
+				if (Math.abs(rank - selectedSquare.rank) === 2) {
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					return false
+				}
+			} else if (Math.abs(file - selectedSquare.file) === 2) {
+				if (Math.abs(rank - selectedSquare.rank) === 1) {
+					if (isEmptyOrEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					return false
+				}
+			} else {
+				return false
+			}
 		} else if (piece === "white pawn") {
 			if (file === selectedSquare.file) {
 				if (rank === selectedSquare.rank + 1) {
@@ -212,13 +528,69 @@ Window {
 						return false
 					}
 				}
+			} else if (Math.abs(file - selectedSquare.file) === 1) {
+				if (rank === selectedSquare.rank + 1) {
+					if (isEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					return false
+				}
 			} else {
-				return false // for time being! dont forget capturing
+				return false
 			}
 		} else if (piece === "black pawn") {
-
+			if (file === selectedSquare.file) {
+				if (rank === selectedSquare.rank - 1) {
+					if (isEmpty(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else if (rank === selectedSquare.rank - 2) {
+					if (selectedSquare.rank === 7) {
+						if (isEmpty(file, rank)) {
+							return true
+						} else {
+							return false
+						}
+					} else {
+						return false
+					}
+				}
+			} else if (Math.abs(file - selectedSquare.file) === 1) {
+				if (rank === selectedSquare.rank - 1) {
+					if (isEnemy(file, rank)) {
+						return true
+					} else {
+						return false
+					}
+				} else {
+					return false
+				}
+			} else {
+				return false
+			}
 		} else {
 			return false
+		}
+	}
+
+	function isEnemy(file, rank) {
+		if (whoseTurn) {
+			if (board.squareArray[file - 1 + (rank - 1) * 8].piece < 0) {
+				return true
+			} else {
+				return false
+			}
+		} else {
+			if (board.squareArray[file - 1 + (rank - 1) * 8].piece > 0) {
+				return true
+			} else {
+				return false
+			}
 		}
 	}
 
@@ -261,6 +633,4 @@ Window {
 			}
 		}
 	}
-
-	function getLegalMoves(file, rank) {}
 }
