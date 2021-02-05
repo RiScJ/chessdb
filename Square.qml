@@ -1,15 +1,28 @@
 import QtQuick 2.0
 
 Item {
-	property color squareColor
+	property color lightColor
+	property color darkColor
+	property color staticColor: (((rank - 1) << 3) + file) + (rank % 2 == 1 ? 1 : 0)
+								& 1 ? darkColor : lightColor
+	property color squareColor: staticColor
 	property int rank
 	property int file
 	property int piece
+
+	signal squareEvent(int squareFile, int squareRank)
 
 	Rectangle {
 		width: 64
 		height: 64
 		color: squareColor
+		x: (file - 1) * 64
+		y: (8 - rank) * 64
+
+		MouseArea {
+			anchors.fill: parent
+			onClicked: squareEvent(file, rank)
+		}
 
 		Image {
 			anchors.fill: parent
@@ -38,7 +51,7 @@ Item {
 					} else if (piece == -6) {
 						"pieces/p.png"
 					} else {
-
+						""
 					}
 		}
 	}
